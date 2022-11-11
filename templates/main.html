@@ -1,0 +1,48 @@
+{% load author_tags %}
+<!!!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h1>{{user}}</h1>
+{% if user.is_authenticated %}
+<a href="{%  url 'logout' %}">logout</a>
+{% else %}
+
+<a href="{% url 'registration' %}">registration</a>
+<a href="{% url 'login' %}">login</a>
+
+{% endif %}
+
+
+{% get_author as authors %}
+<a href="{% url 'main'  %}">Все авторы</a>
+{% for author in authors %}
+<a href="{% url 'author' author.pk %}">{{author.username}}</a>
+{% endfor %}
+<br>
+<a href="{% url 'add' %}">создать</a>
+
+<div style="margin:100px auto 0 auto; width:500px; border:1px solid;">
+
+    <form method="get" action="{% url 'main' %}">
+        <input type="text" name="search">
+        <button type="submit">искать</button>
+    </form>
+
+    {% for task in tasks %}
+    <p style="text-align:center"><a href="{{task.get_absolute_url}}">{{ task.title }}</a> | {{ task.text }}
+
+        {% if task.author == user %}
+        <a href="{% url 'edit' task.pk %}">обновить</a> - <a href="{% url 'delete' task.pk %}">удалить</a>
+        {% endif %}
+    </p>
+    {% endfor %}
+    {{count}} записи
+</div>
+
+</body>
+</html>
